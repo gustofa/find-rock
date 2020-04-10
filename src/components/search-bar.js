@@ -1,15 +1,17 @@
 import React from "react";
 import "./search-bar.css";
 import logo from "../logo.svg";
+import { Link } from "react-router-dom";
+
 class SearchBar extends React.Component {
   state = {
-    busqueda: ""
+    busqueda: "",
   };
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
     console.log("Valor del input: ", e.target.value);
   };
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     console.log("Submit form ", e.target.name);
   };
@@ -18,7 +20,9 @@ class SearchBar extends React.Component {
       <React.Fragment>
         <div className="row">
           <div className="col-md-2">
-            <img src={logo} alt="" className="logo-barra"></img>
+            <Link to="/">
+              <img src={logo} alt="" className="logo-barra"></img>
+            </Link>
           </div>
           <div className="col-md-4">
             <form
