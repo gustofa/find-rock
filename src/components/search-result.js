@@ -2,8 +2,13 @@ import React, { Component } from "react";
 import ArtistCard from "./artist-card.js";
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.css";
+import Loading from "./loading.js";
+import Error from "./error.js";
 class SearchResult extends Component {
   state = {
+    loading: false,
+    error: null,
+    errorMensaje: null,
     data: {
       similarartists: {
         artist: [],
@@ -13,21 +18,48 @@ class SearchResult extends Component {
 
   componentDidMount() {
     this.fetchData(
-      "http://ws.audioscrobbler.com/2.0/?method=artist.getsimilar&artist=thebeatles&api_key=aa1094ce4b08a4af5e9bb485bb4d943f&format=json"
+      "http://xxxws.audioscrobbler.com/2.0/?method=artist.getsimilar&artist=thebeatles&api_key=aa1094ce4b08a4af5e9bb485bb4d943f&format=json"
     );
   }
 
   fetchData = async (url) => {
-    const response = await fetch(url);
-    const data = await response.json();
-    console.log(data, "lo que trae la api");
     this.setState({
-      data: data,
+      loading: true,
     });
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      console.log(data, "lo que trae la api");
+
+      if (data.error) {
+        this.setState({
+          loading: false,
+          error: true,
+          errorMensaje: data.message,
+          // data: data,
+        });
+      } else {
+        this.setState({
+          loading: false,
+          data: data,
+        });
+      }
+    } catch (err) {
+      console.log("Este es el error que trae el catch", err);
+      this.setState({
+        loading: false,
+        error: true,
+        errorMensaje: err.message,
+        // data: data,
+      });
+      console.log("el error en el state", this.state.errorMensaje);
+    }
   };
   render() {
     return (
       <React.Fragment>
+        {this.state.loading && <Loading />}
+        {this.state.error && <Error errorMensaje={this.state.errorMensaje} />}
         <div className="container">
           <div className="row">
             {this.state.data.similarartists.artist.map((item, i) => {
