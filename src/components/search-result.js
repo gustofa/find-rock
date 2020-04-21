@@ -15,12 +15,17 @@ class SearchResult extends Component {
       },
     },
   };
+  componentWillReceiveProps(e) {
+    let termino = e.busqueda;
 
-  componentDidMount() {
     this.fetchData(
-      "http://xxxws.audioscrobbler.com/2.0/?method=artist.getsimilar&artist=thebeatles&api_key=aa1094ce4b08a4af5e9bb485bb4d943f&format=json"
+      "http://ws.audioscrobbler.com/2.0/?method=artist.getsimilar&artist=" +
+        termino +
+        "&api_key=aa1094ce4b08a4af5e9bb485bb4d943f&format=json"
     );
   }
+
+  componentDidMount() {}
 
   fetchData = async (url) => {
     this.setState({
@@ -29,7 +34,6 @@ class SearchResult extends Component {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      console.log(data, "lo que trae la api");
 
       if (data.error) {
         this.setState({
@@ -40,19 +44,18 @@ class SearchResult extends Component {
         });
       } else {
         this.setState({
+          error: false,
           loading: false,
           data: data,
         });
       }
     } catch (err) {
-      console.log("Este es el error que trae el catch", err);
       this.setState({
         loading: false,
         error: true,
         errorMensaje: err.message,
         // data: data,
       });
-      console.log("el error en el state", this.state.errorMensaje);
     }
   };
   render() {
@@ -72,7 +75,6 @@ class SearchResult extends Component {
               );
             })}
           </div>
-          <h1>{this.props.busqueda}</h1>
         </div>
       </React.Fragment>
     );

@@ -10,11 +10,17 @@ class PageSearchResult extends Component {
   };
 
   componentWillMount() {
-    console.log("Dentro de ComponentWillMount");
+    //console.log("Dentro de ComponentWillMount");
   }
 
   componentDidMount() {
-    console.log("Dentro de ComponentDidMount");
+    let search = this.props.history.location.search
+      .substr(1)
+      .replace("%20", " ");
+    console.log("Lo que trae de la url", search);
+    this.setState({
+      busqueda: search,
+    });
   }
 
   changeHandle = (e) => {
@@ -23,7 +29,7 @@ class PageSearchResult extends Component {
     });
   };
   render() {
-    console.log("Dentro de Render");
+    //console.log("Dentro de Render");
     return (
       <React.Fragment>
         <SeachBar onChange={this.changeHandle} busqueda={this.state.busqueda} />
